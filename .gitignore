@@ -4,3 +4,6 @@ vendor
 # the lock and toml file created by dep
 *.lock
 *.toml
+
+# ignore the config file
+*.yml

@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	verifyToken = flag.String("verify-token", "token_verify", "The token used to verify facebook (required)")
+	verifyToken = flag.String("verify-token", "", "The token used to verify facebook (required)")
 	verify      = flag.Bool("should-verify", false, "Whether or not the app should verify itself")
-	pageToken   = flag.String("page-token", "EAAILYOXCJxEBAMtT6ZC53b4hDxifOb7c2u3Kv8ejj1Vn50OcH7zWX6nEc9DBWpgzZAEFOMmu2AmfjzA7fcZBqr2yFM8UF3xdzhHC6satDaiacvnqYZAu0PRPqAs2JQ4eEH9ZAHLcSiD46dPh2TxRgIZB2QTkYZBrZBUiWoktrxqgkQZDZD", "The token that is used to verify the page on facebook")
-	appSecret   = flag.String("app-secret", "07040c1b74220f2a0d53eb65cb9f46a6", "The app secret from the facebook developer portal (required)")
+	pageToken   = flag.String("page-token", "", "The token that is used to verify the page on facebook")
+	appSecret   = flag.String("app-secret", "", "The app secret from the facebook developer portal (required)")
 	host        = flag.String("host", "localhost", "The host used to serve the messenger bot")
 	port        = flag.Int("port", 4000, "The port used to serve the messenger bot")
 )
