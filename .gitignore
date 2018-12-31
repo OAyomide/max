@@ -1,0 +1,6 @@
+# the vendor folder created by dep
+vendor
+
+# the lock and toml file created by dep
+*.lock
+*.toml
