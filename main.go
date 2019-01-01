@@ -6,16 +6,19 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
-	"github.com/paked/messenger"
+	"github.com/oayomide/messenger"
 )
 
+var verifyT, accessT, appS = messenger.GetTokens()
+
 var (
-	verifyToken = flag.String("verify-token", "", "The token used to verify facebook (required)")
+	verifyToken = flag.String("verify-token", verifyT, "The token used to verify facebook (required)")
 	verify      = flag.Bool("should-verify", false, "Whether or not the app should verify itself")
-	pageToken   = flag.String("page-token", "", "The token that is used to verify the page on facebook")
-	appSecret   = flag.String("app-secret", "", "The app secret from the facebook developer portal (required)")
+	pageToken   = flag.String("page-token", accessT, "The token that is used to verify the page on facebook")
+	appSecret   = flag.String("app-secret", appS, "The app secret from the facebook developer portal (required)")
 	host        = flag.String("host", "localhost", "The host used to serve the messenger bot")
 	port        = flag.Int("port", 4000, "The port used to serve the messenger bot")
 )
@@ -49,6 +52,10 @@ func main() {
 			fmt.Println("Oops! Error here:", err)
 		}
 
+		//if the text contains "Hello or Hi" which signifies greetings, we want to reply and greet too (with an emoji probably)
+		if strings.Contains(msg.Text, "Hello") {
+			r.Text(fmt.Sprintf("Hey, %v. I am Max and the personal chatbot to Ayomide Onigbinde. Dont worry, I get better 😉", user.FirstName), messenger.ResponseType)
+		}
 		r.Text(fmt.Sprintf("Hello, %v", user.FirstName), messenger.ResponseType)
 	})
 
@@ -56,3 +63,7 @@ func main() {
 	log.Println("Bot up and running on: ", servingURL)
 	log.Fatal(http.ListenAndServe(servingURL, bot.Handler()))
 }
+
+// func HandleKeyText(text string, func()) bool {
+// 	if
+// }
