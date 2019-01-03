@@ -1,6 +1,8 @@
 package main
 
-import "github.com/oayomide/messenger"
+import (
+	"github.com/oayomide/messenger"
+)
 
 //Hear listens for the text that is coming from the user then trigger, instead of using the
 //
@@ -11,10 +13,13 @@ const (
 	games    = "dfkldkdf"
 )
 
-func Hear(word string) func(mes messenger.Messenger, res *messenger.Response) {
+type hear struct {
+	format string
+	word   string
+}
 
-	if word == mes.Text {
-		return
-	}
-	return
+func 
+// Hear fjdkjkdjg
+func Hear(h hear){
+	toListen := h.word
 }
