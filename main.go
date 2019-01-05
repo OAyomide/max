@@ -1,18 +1,20 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
+	"github.com/mlabouardy/dialogflow-go-client"
+	"github.com/mlabouardy/dialogflow-go-client/models"
 	"github.com/oayomide/messenger"
 )
 
-var verifyT, accessT, appS = messenger.GetTokens()
+var verifyT, accessT, appS, dialogflowToken = messenger.GetTokens()
 
 var (
 	verifyToken = flag.String("verify-token", verifyT, "The token used to verify facebook (required)")
@@ -42,28 +44,37 @@ func main() {
 		WebhookURL:  "/api/webhook",
 	})
 
+	//we want to initialize our DialogFlow here
+	err, dialogflowClient := dialogflow.NewDialogFlowClient(models.Options{
+		AccessToken: dialogflowToken,
+	})
+
+	if err != nil {
+		fmt.Println("Error creating an instance of dialogflow")
+	}
 	//we want to trigger something when out bot receives a message(ing) (event)
 	bot.HandleMessage(func(msg messenger.Message, r *messenger.Response) {
 		fmt.Printf("Message %v received at %v\n", msg.Text, msg.Time.Format(time.UnixDate))
 
-		user, err := bot.ProfileByID(msg.Sender.ID)
+		//user, err := bot.ProfileByID(msg.Sender.ID)
 
 		if err != nil {
 			fmt.Println("Oops! Error here:", err)
 		}
+		//we want to get the intent of the message of the user
+		qr := models.Query{Query: msg.Text}
+		info, err := dialogflowClient.QueryFindRequest(qr)
 
-		//if the text contains "Hello or Hi" which signifies greetings, we want to reply and greet too (with an emoji probably)
-		if strings.Contains(msg.Text, "Hello") {
-			r.Text(fmt.Sprintf("Hey, %v. I am Max and the personal chatbot to Ayomide Onigbinde. Dont worry, I get better 😉", user.FirstName), messenger.ResponseType)
+		if err != nil {
+			fmt.Printf("Error processing NLP on the message. Got the error: %s", err)
 		}
-		r.Text(fmt.Sprintf("Hello, %v", user.FirstName), messenger.ResponseType)
+
+		vd, _ := json.Marshal(info)
+		fmt.Printf("This is the info of the text processed: %v", string(vd))
+		r.Text(info.Result.Fulfillment.Speech, messenger.ResponseType)
 	})
 
 	servingURL := fmt.Sprintf("%s:%d", *host, *port)
 	log.Println("Bot up and running on: ", servingURL)
 	log.Fatal(http.ListenAndServe(servingURL, bot.Handler()))
 }
-
-// func HandleKeyText(text string, func()) bool {
-// 	if
-// }
