@@ -25,6 +25,14 @@ var (
 	port        = flag.Int("port", 4000, "The port used to serve the messenger bot")
 )
 
+var bot = messenger.New(messenger.Options{
+	Verify:      *verify,
+	AppSecret:   *appSecret,
+	VerifyToken: *verifyToken,
+	Token:       *pageToken,
+	WebhookURL:  "/api/webhook",
+})
+
 func main() {
 	flag.Parse()
 
@@ -36,21 +44,13 @@ func main() {
 		os.Exit(-1)
 	}
 
-	bot := messenger.New(messenger.Options{
-		Verify:      *verify,
-		AppSecret:   *appSecret,
-		VerifyToken: *verifyToken,
-		Token:       *pageToken,
-		WebhookURL:  "/api/webhook",
-	})
-
 	//we want to initialize our DialogFlow here
 	err, dialogflowClient := dialogflow.NewDialogFlowClient(models.Options{
 		AccessToken: dialogflowToken,
 	})
 
 	if err != nil {
-		fmt.Println("Error creating an instance of dialogflow")
+		fmt.Println("Error creating an instance of dialogflow", err)
 	}
 	//we want to trigger something when out bot receives a message(ing) (event)
 	bot.HandleMessage(func(msg messenger.Message, r *messenger.Response) {
