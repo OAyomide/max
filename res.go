@@ -4,15 +4,17 @@ import (
 	"github.com/oayomide/messenger"
 )
 
+//HandleIntents checks the type of intent the bot receives and sends formatted messages based on that
 func HandleIntents(intent string, msg messenger.Message, r *messenger.Response) {
 	switch intent {
-	case 'fun':
-		user, err := bot.ProfileByID(msg.Sender.ID)
+	case "":
+		//user, err := bot.ProfileByID(msg.Sender.ID)
 
 		//want to send the image here
-		r.Image("dfkdf")
+		r.Attachment("image", "http://www.messenger-rocks.com/image.jpg", "RESPONSE")
 
-	case 'about':
-		r.TextWithReplies("What do you want to know?", []messenger.QuickReply{}, "msg_tpe")
+	case "unknown":
+		img := []messenger.QuickReply{messenger.QuickReply{Title: "Whatchu wanna knw", Payload: "qr1"}}
+		r.TextWithReplies("What do you want to know?", img, "image")
 	}
 }

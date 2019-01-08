@@ -72,6 +72,7 @@ func main() {
 		vd, _ := json.Marshal(info)
 		fmt.Printf("This is the info of the text processed: %v", string(vd))
 		r.Text(info.Result.Fulfillment.Speech, messenger.ResponseType)
+		//HandleIntents(info.Result.Contexts)
 	})
 
 	servingURL := fmt.Sprintf("%s:%d", *host, *port)
